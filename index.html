@@ -15,7 +15,7 @@
     <body>
         <script>
             // variáveis do jogo
-            var canvas, ctx, ALTURA, LARGURA, velocidade = 10,
+            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros,
             
             carro = {
                 x: 50,
@@ -106,6 +106,7 @@
 
 
             function main(){
+                carros = [];
                 ALTURA = 300;
                 LARGURA = window.innerWidth - 100;
 
@@ -116,6 +117,29 @@
 
                 ctx = canvas.getContext('2d');
                 document.body.appendChild(canvas);
+
+
+                carros.push(carro);
+
+                carros.push({
+                    x: 50,
+                    y: 0,
+                    altura: 50,
+                    largura: 50,
+                    velocidade: 2,
+
+                    atualiza: function(){
+                        this.x += this.velocidade;                   
+
+                    },
+                    desenha: function(){
+                        ctx.fillStyle = 'green';
+                        ctx.fillRect(this.x, this.y, this.altura, this.largura);
+                    }
+                });
+
+                
+
                 // document.addEventListener('mousedown', clique);
                 // document.body.onkeydown = clique;
 
@@ -141,7 +165,9 @@
 
             function atualiza(){
                 // bg.atualiza();
-                carro.atualiza();
+                carros.forEach(carro => {
+                    carro.atualiza(); 
+                });
                 // bloco.atualiza();
                 // if(estadoAtual == estados.jogando){
                     // obstaculos.atualiza();
@@ -155,7 +181,9 @@
                 // ctx.fillStyle = '#80daff';
                 // ctx.fillRect(0, 0, LARGURA, ALTURA);
 
-                carro.desenha();
+                carros.forEach(carro => {
+                    carro.desenha(); 
+                });
 
                 // ctx.fillStyle = '#fff';
                 // ctx.font = '50px Arial';
