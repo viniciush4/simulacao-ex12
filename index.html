@@ -15,24 +15,24 @@
     <body>
         <script>
             // variáveis do jogo
-            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros,
+            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros, L, d;
             
-            carro = {
-                x: 50,
-                y: 0,
-                altura: 50,
-                largura: 50,
-                velocidade: 0.3,
+            // carro = {
+            //     x: 0,
+            //     y: 0,
+            //     altura: 50,
+            //     largura: 50,
+            //     velocidade: 0.3,
 
-                atualiza: function(){
-                    this.x += this.velocidade;                   
+            //     atualiza: function(){
+            //         this.x += this.velocidade;                   
 
-                },
-                desenha: function(){
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(this.x, this.y, this.altura, this.largura);
-                }
-            };
+            //     },
+            //     desenha: function(){
+            //         ctx.fillStyle = 'green';
+            //         ctx.fillRect(this.x, this.y, this.altura, this.largura);
+            //     }
+            // };
             
             // obstaculos = {
             //     _obs: [],
@@ -109,6 +109,8 @@
                 carros = [];
                 ALTURA = 300;
                 LARGURA = window.innerWidth - 100;
+                L = 50;
+                d = 100;
 
                 canvas = document.createElement('canvas');
                 canvas.width = LARGURA;
@@ -119,24 +121,25 @@
                 document.body.appendChild(canvas);
 
 
-                carros.push(carro);
+                // Adiciona carros ao array
+                for (var i = 0; i < 50; i++) {
+                    
+                    carros.push({
+                        x: i<3 ? i*(-L) : -(i-3)*(L+d),
+                        velocidade: i<3 ? 2 : 3,
 
-                carros.push({
-                    x: 50,
-                    y: 0,
-                    altura: 50,
-                    largura: 50,
-                    velocidade: 2,
+                        atualiza: function(){
+                            this.x += this.velocidade;                   
 
-                    atualiza: function(){
-                        this.x += this.velocidade;                   
+                        },
+                        desenha: function(){
+                            ctx.fillStyle = 'green';
+                            ctx.fillRect(this.x, 0, L-10, 30);
+                        }
+                    });
+                }
 
-                    },
-                    desenha: function(){
-                        ctx.fillStyle = 'green';
-                        ctx.fillRect(this.x, this.y, this.altura, this.largura);
-                    }
-                });
+                
 
                 
 
