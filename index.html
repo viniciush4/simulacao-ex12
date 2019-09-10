@@ -15,7 +15,7 @@
     <body>
         <script>
             // variáveis do jogo
-            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros, L, d;
+            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros, L, d, indice_ultimo_carro_lento;
             
             // carro = {
             //     x: 0,
@@ -111,6 +111,7 @@
                 LARGURA = window.innerWidth - 100;
                 L = 50;
                 d = 100;
+                indice_ultimo_carro_lento = 2;
 
                 canvas = document.createElement('canvas');
                 canvas.width = LARGURA;
@@ -125,18 +126,28 @@
                 for (var i = 0; i < 50; i++) {
                     
                     carros.push({
-                        x: i<3 ? i*(-L) : -(i-3)*(L+d),
-                        velocidade: i<3 ? 2 : 3,
+                        x: i<3 ? i*(-L) : i*(-L)+(i-2)*(-d),
+                        velocidade: i<3 ? 1 : 1.5,
+                        indice: i,
 
                         atualiza: function(){
-                            this.x += this.velocidade;                   
-
+                            // console.log(indice_ultimo_carro_lento);
+                            if(indice_ultimo_carro_lento < carros.length && this.indice > 2 && this.x+L >= carros[indice_ultimo_carro_lento].x){
+                                // console.log(this.x+L, indice_ultimo_carro_lento, carros[indice_ultimo_carro_lento].x)
+                                this.velocidade = carros[indice_ultimo_carro_lento].velocidade;
+                                indice_ultimo_carro_lento = this.indice;
+                                    
+                            }
+                            this.x += this.velocidade;
                         },
                         desenha: function(){
                             ctx.fillStyle = 'green';
                             ctx.fillRect(this.x, 0, L-10, 30);
                         }
                     });
+
+                    
+
                 }
 
                 
