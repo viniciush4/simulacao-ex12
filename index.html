@@ -15,7 +15,7 @@
     <body>
         <script>
             // variáveis do jogo
-            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros, L, d, indice_ultimo_carro_lento;
+            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros, L, d, indice_ultimo_carro_lento, marcadores;
             
             // carro = {
             //     x: 0,
@@ -106,6 +106,7 @@
 
 
             function main(){
+                marcadores = [];
                 carros = [];
                 ALTURA = 300;
                 LARGURA = window.innerWidth - 100;
@@ -127,22 +128,42 @@
                     
                     carros.push({
                         x: i<3 ? i*(-L) : i*(-L)+(i-2)*(-d),
-                        velocidade: i<3 ? 1 : 1.5,
+                        velocidade: i<3 ? 1 : 1.4,
                         indice: i,
 
                         atualiza: function(){
-                            // console.log(indice_ultimo_carro_lento);
-                            if(indice_ultimo_carro_lento < carros.length && this.indice > 2 && this.x+L >= carros[indice_ultimo_carro_lento].x){
-                                // console.log(this.x+L, indice_ultimo_carro_lento, carros[indice_ultimo_carro_lento].x)
+
+                            distancia_para_ultimo_carro_lento = carros[indice_ultimo_carro_lento].x - (this.x+L);
+
+                            // Se a distancia para o último carro lento for 
+                            // menor que a velocidade deste carro e maior que zero
+                            // if(this.indice == indice_ultimo_carro_lento+1 && distancia_para_ultimo_carro_lento > 0 && distancia_para_ultimo_carro_lento < this.velocidade){
+                            //     console.log(distancia_para_ultimo_carro_lento);
+                            //     this.velocidade = distancia_para_ultimo_carro_lento;
+                            // }
+
+                            // if(this.indice == indice_ultimo_carro_lento+1){
+                            //     console.log(distancia_para_ultimo_carro_lento);
+                            // }
+
+
+                            if(indice_ultimo_carro_lento < carros.length && this.indice == indice_ultimo_carro_lento+1 && this.x+L >= carros[indice_ultimo_carro_lento].x){
                                 this.velocidade = carros[indice_ultimo_carro_lento].velocidade;
                                 indice_ultimo_carro_lento = this.indice;
+
+                                marcadores.push({
+                                    x: this.x+L
+                                });
                                     
                             }
                             this.x += this.velocidade;
                         },
-                        desenha: function(){
+                        desenha: function(){                            
+                            ctx.fillStyle='#000';
+                            ctx.fillRect(this.x-1, (this.indice%2 == 0 ? 0 : 10)-1, L+(1*2), 30+(1*2));
+
                             ctx.fillStyle = 'green';
-                            ctx.fillRect(this.x, 0, L-10, 30);
+                            ctx.fillRect(this.x, (this.indice%2 == 0 ? 0 : 10), L, 30);
                         }
                     });
 
@@ -197,6 +218,11 @@
 
                 carros.forEach(carro => {
                     carro.desenha(); 
+                });
+
+                marcadores.forEach(marcador => {
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(marcador.x, 40, 5, 5);
                 });
 
                 // ctx.fillStyle = '#fff';
