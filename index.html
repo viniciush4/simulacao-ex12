@@ -1,134 +1,116 @@
 <html>
     <head>
         <title>Simulação - 12</title>
-        <style>
-            canvas {
-                position: absolute;
-                top: 0px;
-                bottom: 0px;
-                left: 0px;
-                right: 0px;
-                margin: auto;
-            }
-        </style>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
+
+        <div class="container">
+            <div class="row text-center my-4">
+                <div class="col-12">
+                    <h4>12 - Onda de choque no trânsito</h4>
+                </div>
+                <div class="col-12">
+                    <p class="lead">
+                        Quando o trânsito é
+                        intenso, uma redução brusca de velocidade pode se propagar como
+                        um pulso, denominado onda de choque, ao longo da fila de carros.
+                        A onda de choque pode ter o sentido do movimento dos carros,
+                        o sentido oposto ou permanecer estacionária.
+                    </p>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-3">
+                    <label for="input-L">L</label>
+                    <div class="input-group mb-3">
+                        <input type="number" class="form-control" id="input-L" placeholder="" value="50" required="" onchange="atualizarValores()">
+                        <div class="input-group-append">
+                            <span class="input-group-text">m</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="input-d">d</label>
+                    <div class="input-group mb-3">
+                            <input type="number" class="form-control" id="input-d" placeholder="" value="100" required="">
+                        <div class="input-group-append">
+                            <span class="input-group-text">m</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="input-v">v</label>
+                    <div class="input-group mb-3">
+                        <input type="number" class="form-control" id="input-v" placeholder="" value="2" required="">
+                        <div class="input-group-append">
+                            <span class="input-group-text">m/s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="input-ve">ve</label>
+                    <div class="input-group mb-3">
+                        <input type="number" class="form-control" id="input-ve" placeholder="" value="1" required="">
+                        <div class="input-group-append">
+                            <span class="input-group-text">m/s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="canvas" />
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
         <script>
-            // variáveis do jogo
-            var canvas, ctx, ALTURA, LARGURA, velocidade = 10, carros, L, d, indice_ultimo_carro_lento, marcadores;
-            
-            // carro = {
-            //     x: 0,
-            //     y: 0,
-            //     altura: 50,
-            //     largura: 50,
-            //     velocidade: 0.3,
-
-            //     atualiza: function(){
-            //         this.x += this.velocidade;                   
-
-            //     },
-            //     desenha: function(){
-            //         ctx.fillStyle = 'green';
-            //         ctx.fillRect(this.x, this.y, this.altura, this.largura);
-            //     }
-            // };
-            
-            // obstaculos = {
-            //     _obs: [],
-            //     cores: ['#ffbc1c', '#ff1c1c', '#ff85e1'],
-            //     tempoInsere: 0,
-                
-            //     insere: function(){
-            //         this._obs.push({
-            //             x: LARGURA,
-            //             largura: 50,
-            //             altura: 30 + Math.floor(120 * Math.random()),
-            //             cor: this.cores[Math.floor(Math.random() * 3)]
-            //         });
-
-            //         this.tempoInsere = 50 + Math.floor(20 * Math.random());
-            //     },
-
-            //     atualiza: function(){
-            //         if(this.tempoInsere == 0){
-            //             this.insere();
-            //         } else {
-            //             this.tempoInsere--;
-            //         }
-
-            //         for(let i=0, tam=this._obs.length; i<tam; i++){
-            //             var obs = this._obs[i];
-                        
-            //             obs.x -= velocidade;
-
-            //             if(bloco.x < obs.x+obs.largura && 
-            //             bloco.x+bloco.largura >= obs.x && 
-            //             bloco.y+bloco.altura >= chao.y-obs.altura)
-            //                 estadoAtual = estados.perdeu;
-
-            //             else if(obs.x == 0)
-            //                 bloco.score++;
-
-            //             else if(obs.x <= -obs.largura){
-            //                 this._obs.splice(i,1);
-            //                 tam--;
-            //                 i--;
-            //             }
-            //         }
-            //     },
-
-            //     limpa: function(){
-            //         this._obs = [];
-            //     },
-
-            //     desenha: function(){
-            //         for(let i=0, tam=this._obs.length; i<tam; i++){
-            //             var obs = this._obs[i];
-            //             ctx.fillStyle = obs.cor;
-            //             ctx.fillRect(obs.x, chao.y-obs.altura, obs.largura, obs.altura);
-            //         }
-            //     }
-            // };
-
-
-            // function clique(event){
-            //     if(estadoAtual == estados.jogando)
-            //         bloco.pula();
-            //     else if(estadoAtual == estados.jogar)
-            //         estadoAtual = estados.jogando;
-            //     else if(estadoAtual == estados.perdeu && bloco.y >= 5*ALTURA){
-            //         estadoAtual = estados.jogar;
-            //         obstaculos.limpa();
-            //         bloco.reset();
-            //     }
-            // }
-
-
+            var 
+            canvas, 
+            ctx, 
+            ALTURA, 
+            LARGURA, 
+            carros, 
+            L, 
+            d, 
+            quantidade_carros_lentos,
+            quantidade_total_carros,
+            indice_ultimo_carro_lento, 
+            marcadores, 
+            posicao_inicial, 
+            velocidade_inicial_carros_lentos,
+            velocidade_inicial_carros_rapidos;
+        
             function main(){
                 marcadores = [];
                 carros = [];
-                ALTURA = 300;
-                LARGURA = window.innerWidth - 100;
+                ALTURA = 55;
+                LARGURA = window.innerWidth;
                 L = 50;
                 d = 100;
-                indice_ultimo_carro_lento = 2;
+                quantidade_carros_lentos = 3;
+                quantidade_total_carros = 50;
+                indice_ultimo_carro_lento = quantidade_carros_lentos - 1;;
+                posicao_inicial = 250;
+                velocidade_inicial_carros_lentos = 1;
+                velocidade_inicial_carros_rapidos = 2;
 
-                canvas = document.createElement('canvas');
+                canvas = document.getElementById('canvas');
                 canvas.width = LARGURA;
                 canvas.height = ALTURA;
-                canvas.style.border = '1px solid #000';
-
                 ctx = canvas.getContext('2d');
-                document.body.appendChild(canvas);
 
+                var img = new Image();
+                img.src = "1.svg";
 
                 // Adiciona carros ao array
-                for (var i = 0; i < 50; i++) {
+                for (var i = 0; i < quantidade_total_carros; i++) {
                     
                     carros.push({
-                        x: i<3 ? i*(-L) : i*(-L)+(i-2)*(-d),
-                        velocidade: i<3 ? 1 : 1.4,
+                        x: i<quantidade_carros_lentos ? i*(-L)+posicao_inicial : i*(-L)+(i-indice_ultimo_carro_lento)*(-d)+posicao_inicial,
+                        velocidade: i<quantidade_carros_lentos ? velocidade_inicial_carros_lentos : velocidade_inicial_carros_rapidos,
                         indice: i,
 
                         atualiza: function(){
@@ -137,43 +119,33 @@
 
                             // Se a distancia para o último carro lento for 
                             // menor que a velocidade deste carro e maior que zero
-                            // if(this.indice == indice_ultimo_carro_lento+1 && distancia_para_ultimo_carro_lento > 0 && distancia_para_ultimo_carro_lento < this.velocidade){
-                            //     console.log(distancia_para_ultimo_carro_lento);
-                            //     this.velocidade = distancia_para_ultimo_carro_lento;
-                            // }
+                            if(this.indice == indice_ultimo_carro_lento+1 && distancia_para_ultimo_carro_lento > 0 && distancia_para_ultimo_carro_lento < this.velocidade){
+                                this.velocidade = distancia_para_ultimo_carro_lento;
+                            }
 
-                            // if(this.indice == indice_ultimo_carro_lento+1){
-                            //     console.log(distancia_para_ultimo_carro_lento);
-                            // }
+                            this.x += this.velocidade;
 
-
-                            if(indice_ultimo_carro_lento < carros.length && this.indice == indice_ultimo_carro_lento+1 && this.x+L >= carros[indice_ultimo_carro_lento].x){
+                            if(this.indice == indice_ultimo_carro_lento+1 && this.x+L >= carros[indice_ultimo_carro_lento].x){
                                 this.velocidade = carros[indice_ultimo_carro_lento].velocidade;
                                 indice_ultimo_carro_lento = this.indice;
 
                                 marcadores.push({
                                     x: this.x+L
                                 });
-                                    
                             }
-                            this.x += this.velocidade;
+                            
                         },
-                        desenha: function(){                            
-                            ctx.fillStyle='#000';
-                            ctx.fillRect(this.x-1, (this.indice%2 == 0 ? 0 : 10)-1, L+(1*2), 30+(1*2));
+                        desenha: function(){
+                            // ctx.fillStyle = 'green';
+                            // ctx.fillRect(this.x, 20, L, 15);
 
-                            ctx.fillStyle = 'green';
-                            ctx.fillRect(this.x, (this.indice%2 == 0 ? 0 : 10), L, 30);
+                            // ctx.fillStyle='#000';
+                            // ctx.strokeRect(this.x, 20, L, 15);
+
+                            ctx.drawImage(img, this.x, 20, L-10, 15);
                         }
                     });
-
-                    
-
                 }
-
-                
-
-                
 
                 // document.addEventListener('mousedown', clique);
                 // document.body.onkeydown = clique;
@@ -199,22 +171,14 @@
 
 
             function atualiza(){
-                // bg.atualiza();
                 carros.forEach(carro => {
                     carro.atualiza(); 
                 });
-                // bloco.atualiza();
-                // if(estadoAtual == estados.jogando){
-                    // obstaculos.atualiza();
-                // }
             }
 
 
             function desenha(){
                 ctx.clearRect(0, 0, LARGURA, ALTURA);
-
-                // ctx.fillStyle = '#80daff';
-                // ctx.fillRect(0, 0, LARGURA, ALTURA);
 
                 carros.forEach(carro => {
                     carro.desenha(); 
@@ -222,54 +186,15 @@
 
                 marcadores.forEach(marcador => {
                     ctx.fillStyle = 'green';
-                    ctx.fillRect(marcador.x, 40, 5, 5);
+                    ctx.fillRect(marcador.x, 0, 5, 5);
                 });
-
-                // ctx.fillStyle = '#fff';
-                // ctx.font = '50px Arial';
-                // ctx.fillText(bloco.score, 30, 68);
-
-                // if(estadoAtual == estados.jogar){
-                //     ctx.fillStyle = 'green';
-                //     ctx.fillRect(LARGURA/2-50, ALTURA/2-50, 100, 100);
-
-                // } else if(estadoAtual == estados.perdeu) {
-                //     ctx.fillStyle = 'red';
-                //     ctx.fillRect(LARGURA/2-50, ALTURA/2-50, 100, 100);
-                //     ctx.save();
-                //     ctx.translate(LARGURA/2, ALTURA/2);
-                //     ctx.fillStyle = '#fff';
-
-
-                //     if(bloco.score > record)
-                //         ctx.fillText('Novo Record!', -150, -65);
-                //     else if (record < 10)
-                //         ctx.fillText('Record '+record, -99, -65);
-                //     else if(record >= 10 && record < 100)
-                //         ctx.fillText('Record '+record, -112, -65);
-                //     else
-                //         ctx.fillText('Record '+record, -125, -65)
-
-
-                //     if(bloco.score < 10)
-                //         ctx.fillText(bloco.score, -13, 18);
-                //     else if(bloco.score >= 10 && bloco.score < 100)
-                //         ctx.fillText(bloco.score, -27, 18);
-                //     else
-                //         ctx.fillText(bloco.score, -40, 18);
-
-
-                    // ctx.restore();
-
-                // } else if(estadoAtual == estados.jogando){
-                //     obstaculos.desenha();
-                // }
-
-                // chao.desenha();
-                // bloco.desenha();
             }
 
-
+            function atualizarValores(){
+                main();
+                L = $('#input-L').val();
+                alert(L);
+            }
             main();
         </script>
     </body>
