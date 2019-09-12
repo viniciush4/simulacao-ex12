@@ -70,40 +70,23 @@
             var 
             canvas, 
             ctx, 
-            ALTURA, 
-            LARGURA, 
-            carros, 
-            L, 
-            d, 
-            quantidade_carros_lentos,
-            quantidade_total_carros,
-            indice_ultimo_carro_lento, 
-            marcadores, 
-            posicao_inicial, 
-            velocidade_inicial_carros_lentos,
-            velocidade_inicial_carros_rapidos;
+            ALTURA = 55,
+            LARGURA = window.innerWidth,
+            imagem_carro
+            carros = [], 
+            L = 50, 
+            d = 100, 
+            quantidade_carros_lentos = 3,
+            quantidade_total_carros = 50,
+            indice_ultimo_carro_lento = quantidade_carros_lentos - 1, 
+            marcadores = [], 
+            posicao_inicial = 250, 
+            velocidade_inicial_carros_lentos = 1,
+            velocidade_inicial_carros_rapidos = 2;
         
             function main(){
-                marcadores = [];
-                carros = [];
-                ALTURA = 55;
-                LARGURA = window.innerWidth;
-                L = 50;
-                d = 100;
-                quantidade_carros_lentos = 3;
-                quantidade_total_carros = 50;
-                indice_ultimo_carro_lento = quantidade_carros_lentos - 1;;
-                posicao_inicial = 250;
-                velocidade_inicial_carros_lentos = 1;
-                velocidade_inicial_carros_rapidos = 2;
 
-                canvas = document.getElementById('canvas');
-                canvas.width = LARGURA;
-                canvas.height = ALTURA;
-                ctx = canvas.getContext('2d');
-
-                var img = new Image();
-                img.src = "1.svg";
+                iniciarCanvas();
 
                 // Adiciona carros ao array
                 for (var i = 0; i < quantidade_total_carros; i++) {
@@ -142,7 +125,7 @@
                             // ctx.fillStyle='#000';
                             // ctx.strokeRect(this.x, 20, L, 15);
 
-                            ctx.drawImage(img, this.x, 20, L-10, 15);
+                            ctx.drawImage(imagem_carro, this.x, 20, L-10, 15);
                         }
                     });
                 }
@@ -191,10 +174,31 @@
             }
 
             function atualizarValores(){
-                main();
+                carros = [], 
+                L = 50, 
+                d = 100, 
+                quantidade_carros_lentos = 3,
+                quantidade_total_carros = 50,
+                indice_ultimo_carro_lento = quantidade_carros_lentos - 1, 
+                marcadores = [], 
+                posicao_inicial = 250, 
+                velocidade_inicial_carros_lentos = 1,
+                velocidade_inicial_carros_rapidos = 2;
+                
                 L = $('#input-L').val();
-                alert(L);
+                main();
             }
+
+            function iniciarCanvas(){
+                canvas = document.getElementById('canvas');
+                canvas.width = LARGURA;
+                canvas.height = ALTURA;
+                ctx = canvas.getContext('2d');
+
+                imagem_carro = new Image();
+                imagem_carro.src = "1.svg";
+            }
+
             main();
         </script>
     </body>
