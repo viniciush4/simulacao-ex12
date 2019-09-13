@@ -16,52 +16,26 @@
                         intenso, uma redução brusca de velocidade pode se propagar como
                         um pulso, denominado onda de choque, ao longo da fila de carros.
                         A onda de choque pode ter o sentido do movimento dos carros,
-                        o sentido oposto ou permanecer estacionária.
+                        o sentido oposto ou permanecer estacionária. Este simulador permite
+                        visualizar o efeito da modificação da distância "d" (Fig. 2-23) 
+                        na situação proposta pelo Problema 12, do capítulo 2 do livro Fundamentos
+                        de Física (Halliday, 2008).
                     </p>
                 </div>
-            </div>
-            <div class="row mb-5">
-                <div class="col-3">
-                    <label for="input-L">L</label>
-                    <div class="input-group mb-3">
-                        <input type="number" class="form-control" id="input-L" placeholder="" value="50" required="" onchange="atualizarValores()">
-                        <div class="input-group-append">
-                            <span class="input-group-text">m</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
+                <div class="col-3 mt-5">
                     <label for="input-d">d</label>
                     <div class="input-group mb-3">
-                            <input type="number" class="form-control" id="input-d" placeholder="" value="100" required="">
+                            <input type="number" class="form-control" id="input-d" placeholder="" value="" required="" onchange="atualizarValores()">
                         <div class="input-group-append">
                             <span class="input-group-text">m</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
-                    <label for="input-v">v</label>
-                    <div class="input-group mb-3">
-                        <input type="number" class="form-control" id="input-v" placeholder="" value="2" required="">
-                        <div class="input-group-append">
-                            <span class="input-group-text">m/s</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <label for="input-ve">ve</label>
-                    <div class="input-group mb-3">
-                        <input type="number" class="form-control" id="input-ve" placeholder="" value="1" required="">
-                        <div class="input-group-append">
-                            <span class="input-group-text">m/s</span>
-                        </div>
-                    </div>
+                <div class="col-9 mt-5">
+                    <img src="fig.png" />
                 </div>
             </div>
         </div>
-
-        <canvas id="canvas" />
-
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -70,19 +44,21 @@
             var 
             canvas, 
             ctx, 
+            request_animation_frame,
             ALTURA = 55,
             LARGURA = window.innerWidth,
             imagem_carro
-            carros = [], 
-            L = 50, 
-            d = 100, 
+            carros = [],
+            L = 12, 
+            d = 500, 
+            distancia_seguranca = 2,
             quantidade_carros_lentos = 3,
-            quantidade_total_carros = 50,
+            quantidade_total_carros = 100,
             indice_ultimo_carro_lento = quantidade_carros_lentos - 1, 
             marcadores = [], 
-            posicao_inicial = 250, 
+            posicao_inicial = LARGURA / 2, 
             velocidade_inicial_carros_lentos = 1,
-            velocidade_inicial_carros_rapidos = 2;
+            velocidade_inicial_carros_rapidos = 5;
         
             function main(){
 
@@ -113,7 +89,7 @@
                                 indice_ultimo_carro_lento = this.indice;
 
                                 marcadores.push({
-                                    x: this.x+L
+                                    x: this.x
                                 });
                             }
                             
@@ -125,22 +101,12 @@
                             // ctx.fillStyle='#000';
                             // ctx.strokeRect(this.x, 20, L, 15);
 
-                            ctx.drawImage(imagem_carro, this.x, 20, L-10, 15);
+                            ctx.drawImage(imagem_carro, this.x, 20, L-distancia_seguranca, 5);
                         }
                     });
                 }
 
-                // document.addEventListener('mousedown', clique);
-                // document.body.onkeydown = clique;
-
-                // estadoAtual = estados.jogar;
-                // record = localStorage.getItem('record');
-
-                // if(record == null)
-                    // record = 0;
-
-                // img = new Image();
-                // img.src = 'img/sprite.svg';
+                setInterval(function(){ roda(); }, 1000);
 
                 roda();
             }
@@ -149,7 +115,7 @@
             function roda(){
                 atualiza();
                 desenha();
-                window.requestAnimationFrame(roda);
+                // request_animation_frame = window.requestAnimationFrame(roda);
             }
 
 
@@ -173,30 +139,37 @@
                 });
             }
 
+
             function atualizarValores(){
-                carros = [], 
-                L = 50, 
-                d = 100, 
-                quantidade_carros_lentos = 3,
-                quantidade_total_carros = 50,
-                indice_ultimo_carro_lento = quantidade_carros_lentos - 1, 
-                marcadores = [], 
-                posicao_inicial = 250, 
-                velocidade_inicial_carros_lentos = 1,
-                velocidade_inicial_carros_rapidos = 2;
-                
-                L = $('#input-L').val();
-                main();
+
+                localStorage.setItem('d', $('#input-d').val());
+
+                location.reload();
+
+                // cancelAnimationFrame(request_animation_frame);
+                // carros = [];
+                // marcadores = [];
+                // canvas.parentNode.removeChild(canvas);
+
+                // d = $('#input-d').val();
+                // main();
             }
 
+
             function iniciarCanvas(){
-                canvas = document.getElementById('canvas');
+
+                canvas = document.createElement('canvas');
                 canvas.width = LARGURA;
                 canvas.height = ALTURA;
                 ctx = canvas.getContext('2d');
+                document.body.appendChild(canvas);
 
                 imagem_carro = new Image();
                 imagem_carro.src = "1.svg";
+
+                d = localStorage.getItem('d');
+
+                $('#input-d').val(d);
             }
 
             main();
