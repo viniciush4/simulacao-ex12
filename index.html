@@ -58,7 +58,8 @@
             marcadores = [], 
             posicao_inicial = LARGURA / 2, 
             velocidade_inicial_carros_lentos = 1,
-            velocidade_inicial_carros_rapidos = 5;
+            velocidade_inicial_carros_rapidos = 5,
+            quantidade_frames = 0;
         
             function main(){
 
@@ -89,7 +90,8 @@
                                 indice_ultimo_carro_lento = this.indice;
 
                                 marcadores.push({
-                                    x: this.x
+                                    x: this.x,
+                                    frame: quantidade_frames
                                 });
                             }
                             
@@ -106,16 +108,17 @@
                     });
                 }
 
-                setInterval(function(){ roda(); }, 1000);
+                // setInterval(function(){ roda(); }, 1000);
 
                 roda();
             }
 
         
             function roda(){
+                quantidade_frames++;
                 atualiza();
                 desenha();
-                // request_animation_frame = window.requestAnimationFrame(roda);
+                request_animation_frame = window.requestAnimationFrame(roda);
             }
 
 
@@ -137,6 +140,9 @@
                     ctx.fillStyle = 'green';
                     ctx.fillRect(marcador.x, 0, 5, 5);
                 });
+
+                ctx.font = "15px Georgia";
+                ctx.fillText("Hello World!", 20, 50);
             }
 
 
