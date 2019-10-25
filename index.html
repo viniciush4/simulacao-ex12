@@ -44,21 +44,23 @@
             var 
             canvas, 
             ctx, 
+            timediff = 0,
+            timestamp = 0,
             request_animation_frame,
             ALTURA = 55,
             LARGURA = window.innerWidth,
             imagem_carro
             carros = [],
             L = 12, 
-            d = 500, 
+            d = 48, 
             distancia_seguranca = 2,
             quantidade_carros_lentos = 3,
             quantidade_total_carros = 100,
             indice_ultimo_carro_lento = quantidade_carros_lentos - 1, 
             marcadores = [], 
             posicao_inicial = LARGURA / 2, 
-            velocidade_inicial_carros_lentos = 1,
-            velocidade_inicial_carros_rapidos = 5;
+            velocidade_inicial_carros_lentos = 1, // 1
+            velocidade_inicial_carros_rapidos = 5; // 5
         
             function main(){
 
@@ -82,7 +84,12 @@
                                 this.velocidade = distancia_para_ultimo_carro_lento;
                             }
 
+                            // let res = this.velocidade * (1 / (timediff/1000));
+
+                            // console.log(this.velocidade);
+
                             this.x += this.velocidade;
+
 
                             if(this.indice == indice_ultimo_carro_lento+1 && this.x+L >= carros[indice_ultimo_carro_lento].x){
                                 this.velocidade = carros[indice_ultimo_carro_lento].velocidade;
@@ -106,8 +113,6 @@
                     });
                 }
 
-                setInterval(function(){ roda(); }, 1000);
-
                 roda();
             }
 
@@ -115,11 +120,14 @@
             function roda(){
                 atualiza();
                 desenha();
-                // request_animation_frame = window.requestAnimationFrame(roda);
+                request_animation_frame = window.requestAnimationFrame(roda);
             }
 
 
             function atualiza(){
+                // timediff = timestamp - timediff;
+                // timestamp = new Date().getTime();
+
                 carros.forEach(carro => {
                     carro.atualiza(); 
                 });
