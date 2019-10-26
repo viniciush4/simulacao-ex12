@@ -183,6 +183,8 @@
 
                 d = localStorage.getItem('d');
 
+                if (d == null || d == undefined) { d = 48; }
+
                 $('#input-d').val(d);
             }
 
